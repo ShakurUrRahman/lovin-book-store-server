@@ -42,6 +42,7 @@ async function run() {
         const categoryCollection = client.db('lovinBook').collection('categoryDetails');
         const bookingsCollection = client.db('lovinBook').collection('bookings');
         const buyersCollection = client.db('lovinBook').collection('buyers');
+        const productsCollection = client.db('lovinBook').collection('products');
 
 
         app.get('/', async (req, res) => {
@@ -92,8 +93,8 @@ async function run() {
 
         app.get('/buyers', async (req, res) => {
             const query = {};
-            const users = await buyersCollection.find(query).toArray();
-            res.send(users)
+            const buyers = await buyersCollection.find(query).toArray();
+            res.send(buyers)
         })
 
         app.get('/buyers/admin/:email', async (req, res) => {
@@ -127,6 +128,23 @@ async function run() {
                 }
             }
             const result = buyersCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
+
+        app.get('/allBuyers', async (req, res) => {
+            const query = { role: 'Buyer' };
+            const buyers = await buyersCollection.find(query).toArray();
+            res.send(buyers)
+        })
+        app.get('/sellers', async (req, res) => {
+            const query = { role: 'Seller' };
+            const sellers = await buyersCollection.find(query).toArray();
+            res.send(sellers)
+        })
+
+        app.post('/products', async (req, res) => {
+            const product = req.body;
+            const result = await productsCollection.insertOne(product);
             res.send(result);
         })
     }
